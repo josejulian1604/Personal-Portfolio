@@ -33,3 +33,12 @@ Personal portfolio website for José Julián Gutiérrez Badilla, showcasing proj
 ## Project-specific skills
 
 `.claude/skills/` holds skills specific to this repo (e.g. adding a new project entry, updating the experience section). Check there before writing a repetitive task by hand.
+
+## Project context
+
+`docs/` holds process/product context, separate from the technical conventions above:
+- `docs/PROJECT.md` — purpose, target audience, scope
+- `docs/TASKS.md` — checklist of pending/completed work
+- `docs/DECISIONS.md` — log of design/architecture decisions and why they were made
+
+Check `docs/TASKS.md` for current state before starting work, and update it as tasks are completed.

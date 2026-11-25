@@ -40,3 +40,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# private content source (the redacted, public copy lives in src/content/)
+/docs/PORTFOLIO-CONTENT.md
+
+# local editor and agent config
+/.vscode/
+.claude/settings.local.json
+
+# local verification and tooling output
+/test-results/
+/playwright-report/
+/lighthouse*
+/tmp/
+/gold_traces/

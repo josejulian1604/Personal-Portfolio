@@ -1,26 +1,308 @@
 @import "tailwindcss";
 
+/*
+ * Nocturne design tokens — single source of truth (see docs/BRAND.md).
+ *
+ * Three layers, per the design-system skill:
+ *   1. Primitives  (:root, raw values; never used directly in components)
+ *   2. Semantic    (@theme, purpose aliases; these generate Tailwind utilities
+ *                   such as `bg-surface`, `text-fg-muted`, `border-border`)
+ *   3. Component   (:root, per-component aliases consumed via `bg-(--token)`)
+ *
+ * Components must never contain raw hex values; they use semantic utilities
+ * or component tokens only. Contrast ratios are documented in docs/BRAND.md.
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. PRIMITIVES
+ * ------------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Ink (neutral, violet-tinted) */
+  --ink-950: #0b0a10; /* ground */
+  --ink-900: #121019; /* surface */
+  --ink-850: #18151f; /* raised surface */
+  --ink-800: #24202d; /* hairline */
+  --ink-700: #322c3f; /* border */
+  --ink-600: #615a73; /* control border (3.02:1 on ink-950) */
+
+  /* Text neutrals */
+  --mist-50: #f4f2f8; /* primary text (17.75:1 on ink-950) */
+  --mist-300: #a9a3b8; /* muted text (8.09:1 on ink-950) */
+  --mist-500: #847e95; /* subtle text, captions only (5.07:1 on ink-950) */
+
+  /* Violet */
+  --violet-300: #c4b5fd; /* hover text / hover fill */
+  --violet-400: #a78bfa; /* accent text + primary fill (7.24:1 on ink-950) */
+  --violet-500: #8b5cf6; /* focus ring, glow, pressed fill (non-text) */
+  --violet-600: #7c3aed; /* deep glow stop */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ---------------------------------------------------------------------------
+ * 2. SEMANTIC (Tailwind theme)
+ * ------------------------------------------------------------------------- */
+@theme static {
+  /* Only Nocturne colors exist; the default Tailwind palette is removed so
+     components cannot reach for raw palette values. */
+  --color-*: initial;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-bg: var(--ink-950);
+  --color-surface: var(--ink-900);
+  --color-surface-raised: var(--ink-850);
+  --color-border: var(--ink-800);
+  --color-border-strong: var(--ink-700);
+  --color-border-control: var(--ink-600);
+
+  --color-fg: var(--mist-50);
+  --color-fg-muted: var(--mist-300);
+  --color-fg-subtle: var(--mist-500);
+
+  --color-accent: var(--violet-400);
+  --color-accent-hover: var(--violet-300);
+  --color-accent-pressed: var(--violet-500);
+  --color-accent-fg: var(--ink-950);
+  --color-ring: var(--violet-500);
+  --color-glow: var(--violet-500);
+  --color-glow-deep: var(--violet-600);
+
+  /* Fluid type scale. The default scale is removed to enforce this one. */
+  --text-*: initial;
+  --text-display: clamp(2.75rem, 1.4rem + 5.6vw, 6rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.04em;
+  --text-display--font-weight: 600;
+  --text-title: clamp(2.25rem, 1.3rem + 3.6vw, 4.25rem);
+  --text-title--line-height: 1.04;
+  --text-title--letter-spacing: -0.035em;
+  --text-title--font-weight: 600;
+  --text-h2: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.03em;
+  --text-h2--font-weight: 600;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.015em;
+  --text-h3--font-weight: 600;
+  --text-lead: clamp(1.1875rem, 1rem + 0.8vw, 1.5rem);
+  --text-lead--line-height: 1.5;
+  --text-lead--letter-spacing: -0.01em;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.08em;
+
+  /* Spacing (4px base comes from Tailwind's --spacing) */
+  --spacing-section: clamp(6rem, 4rem + 8vw, 10rem);
+  --spacing-header: 4rem;
+
+  /* Layout widths */
+  --container-page: 75rem; /* 1200px */
+  --container-prose: 68ch;
+
+  /* Motion */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-rise: rise 600ms var(--ease-out-quint) both;
+  --animate-menu-in: menu-in 250ms var(--ease-out-quint) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Fine pointers that can hover (mouse, trackpad). Used for cursor-follow effects. */
+@custom-variant pointer-fine (@media (hover: hover) and (pointer: fine));
+
+/* Fonts come from next/font CSS variables set on <html> in layout.tsx. */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. COMPONENT TOKENS
+ * ------------------------------------------------------------------------- */
+:root {
+  /* Motion durations */
+  --duration-hover: 150ms;
+  --duration-ui: 250ms;
+  --duration-reveal: 600ms;
+
+  /* Focus ring */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* LinkButton — primary */
+  --button-primary-bg: var(--color-accent);
+  --button-primary-bg-hover: var(--color-accent-hover);
+  --button-primary-bg-active: var(--color-accent-pressed);
+  --button-primary-fg: var(--color-accent-fg);
+
+  /* LinkButton — ghost */
+  --button-ghost-fg: var(--color-fg);
+  --button-ghost-border: var(--color-border-control);
+  --button-ghost-border-hover: var(--color-fg-subtle);
+  --button-ghost-bg-hover: var(--color-surface-raised);
+  --button-ghost-bg-active: var(--color-surface);
+
+  /* Tag */
+  --tag-bg: var(--color-surface);
+  --tag-bg-inset: var(--color-bg);
+  --tag-fg: var(--color-fg-muted);
+  --tag-border: var(--color-border);
+
+  /* ProjectCard */
+  --card-bg: var(--color-surface);
+  --card-border: var(--color-border);
+  --card-border-hover: color-mix(in oklab, var(--color-accent) 45%, var(--color-border-strong));
+  --card-spotlight: color-mix(in oklab, var(--color-glow) 18%, transparent);
+
+  /* Header */
+  --header-bg: color-mix(in oklab, var(--color-bg) 80%, transparent);
+  --header-border: var(--color-border);
+
+  /* Hero effects */
+  --hero-glow: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--color-glow) 32%, transparent),
+    color-mix(in oklab, var(--color-glow-deep) 10%, transparent) 55%,
+    transparent
+  );
+  --grain-opacity: 0.06;
+}
+
+/* ---------------------------------------------------------------------------
+ * BASE
+ * ------------------------------------------------------------------------- */
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-bg);
+    scroll-padding-top: calc(var(--spacing-header) + 1.5rem);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-accent-pressed) 40%, transparent);
+    color: var(--color-fg);
+  }
+
+  /* Visible focus everywhere; outline (not box-shadow) so it survives
+     forced-colors mode. The offset gap shows the page ground. */
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+}
+
+/* Smooth anchor scrolling only when the user allows motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Scroll reveal: <Reveal> marks elements, <RevealObserver> adds data-revealed
+   on first view. Fade + 14px rise; only opacity and translate animate. */
+[data-reveal] {
+  transition:
+    opacity var(--duration-reveal) var(--ease-out-quint),
+    translate var(--duration-reveal) var(--ease-out-quint);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal]:not([data-revealed]) {
+  opacity: 0;
+  translate: 0 14px;
+}
+
+/* Reduced-motion guard: neutralise CSS animations and transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Reveals: content is simply there, with no fade or rise. */
+  [data-reveal] {
+    opacity: 1 !important;
+    translate: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * UTILITIES
+ * ------------------------------------------------------------------------- */
+
+/* Mono metadata label: section indices, dates, stack tags. */
+@utility mono-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+}
+
+/* Soft radial violet glow (decorative only).
+   Not named `bg-glow`: that collides with Tailwind's generated color utility
+   for `--color-glow`, which paints a solid violet background-color. */
+@utility hero-glow {
+  background-image: var(--hero-glow);
+}
+
+/* Cursor spotlight for project cards (decorative only). The position comes from
+   --spot-x / --spot-y, set by the SpotlightGroup client island. Not named
+   `bg-*`, to avoid colliding with generated color utilities. */
+@utility card-spotlight {
+  background-image: radial-gradient(
+    24rem circle at var(--spot-x, 50%) var(--spot-y, 0%),
+    var(--card-spotlight),
+    transparent 70%
+  );
 }

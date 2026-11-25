@@ -29,6 +29,7 @@ Personal portfolio website for José Julián Gutiérrez Badilla, showcasing proj
 - Prefer Server Components; mark Client Components with `"use client"` only when needed (interactivity, hooks).
 - Style with Tailwind utility classes; avoid ad-hoc CSS files.
 - Keep portfolio content (project list, bio, links) as data in `src/content/`, rendered by components — don't hardcode content into JSX.
+- Everything must be in English: documentation, code, commits.
 
 ## Project-specific skills
 
@@ -40,5 +41,6 @@ Personal portfolio website for José Julián Gutiérrez Badilla, showcasing proj
 - `docs/PROJECT.md` — purpose, target audience, scope
 - `docs/TASKS.md` — checklist of pending/completed work
 - `docs/DECISIONS.md` — log of design/architecture decisions and why they were made
+- `docs/PORTFOLIO-CONTENT.md` — content for the portfolio (experience, personal projects, etc.) — **gitignored, local only** (the repo is public); `src/content/` holds the published, redacted copy
 
 Check `docs/TASKS.md` for current state before starting work, and update it as tasks are completed.

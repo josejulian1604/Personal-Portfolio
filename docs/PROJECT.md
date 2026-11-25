@@ -1,26 +1,50 @@
-# Objetivo del proyecto
+# Project Overview
 
-## Qué es
+## Purpose
 
-Portafolio personal web de José Julián Gutiérrez Badilla.
+Personal portfolio website for José Julián Gutiérrez Badilla, showcasing
+software engineering projects and professional experience.
 
-## Objetivo del sitio
+## Target audience
 
-[TODO: ¿Qué se quiere lograr con el portafolio? Ej. conseguir trabajo, atraer clientes freelance, mostrar proyectos a la comunidad técnica]
+Technical recruiters and hiring managers evaluating José for software
+engineering roles. Content and copy should be written with this audience
+in mind — clear technical context, no unexplained jargon, easy to scan.
 
-## Audiencia objetivo
+## Scope (v1)
 
-[TODO: ¿Quién va a ver este sitio principalmente? Ej. reclutadores, clientes, otros desarrolladores]
+All copy comes from `docs/PORTFOLIO-CONTENT.md`, the single source of truth
+for site content (see DECISIONS.md).
 
-## Alcance (secciones del sitio)
+- **Sections** (home page, in order): Hero, Currently, About, Experience,
+  Projects, Skills, Credentials (Education, Certifications, Recognition),
+  Contact
+- **Language**: English only
+- **Projects section**: hybrid model — a card grid on the home page,
+  each card linking to its own `/projects/[slug]` page with the full case
+  study.
+- **Contact**: direct links (mailto, LinkedIn, GitHub). No contact form,
+  no backend.
+- **Featured projects**: Breeder's Desk, GenDD Intake Agent — Event-Driven
+  Pipeline, Portfolio Website, Pulse, RAG Japan Travel Chatbot,
+  SIGAC. More can be added later — this is why project data lives in
+  `src/content/`, not hardcoded in components (see CLAUDE.md conventions).
 
-[TODO: confirmar secciones. Ej.]
-- Hero / presentación
-- Proyectos destacados
-- Experiencia / trayectoria
-- Habilidades / stack
-- Contacto
+## Out of scope (v1)
 
-## Fuera de alcance (por ahora)
+Explicitly deferred, not forgotten:
 
-[TODO: qué explícitamente NO incluye esta versión. Ej. blog, CMS, multi-idioma, backend propio]
+- Tag/filter UI for projects by technology
+- Blog / writing section
+- CMS or database-backed content
+- Contact form with backend/email service
+- Light theme / theme toggle
+
+The visual design system (Nocturne: voice, color, type, spacing, motion,
+component states) is documented in `docs/BRAND.md`.
+
+## Non-goals
+
+This is a portfolio, not a blog or a SaaS product. Avoid scope creep
+toward features that don't serve "recruiter evaluates José's work
+quickly."
